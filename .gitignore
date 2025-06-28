@@ -52,3 +52,5 @@ erl_crash.dump
 # Optional: Docker-related files (if using Docker)
 .dockerignore
 Dockerfile
+
+/lib/**/_*
