@@ -27,8 +27,6 @@ defmodule SpokesmanWeb.ChatLive.Show do
         <input type="text" name="text" />
       </form>
     </section>
-    <.table>
-    </.table>
     """
   end
 
