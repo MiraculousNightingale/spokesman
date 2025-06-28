@@ -1,10 +1,54 @@
-/_build
-/cover
-/deps
-/doc
 /.fetch
-erl_crash.dump
-*.ez
 *.beam
+
+# The directory Mix will write compiled artifacts to.
+/_build/
+
+# The directory Mix downloads your dependencies sources to.
+/deps/
+
+# Where third-party dependencies like ExDoc output generated docs.
+/doc/
+
+# Coverage assets from running "mix test --cover".
+/cover/
+
+# If the VM crashes, it generates a dump; ignore it.
+erl_crash.dump
+
+# Archive artifacts (built via "mix archive.build").
+*.ez
+
+# Temporary files
+/tmp/
+
+# Static artifacts (e.g., Node.js dependencies)
+/node_modules/
+/assets/node_modules/
+
+# Ignore assets produced by build tools (adjust based on deployment strategy)
+/priv/static/assets/
+
+# macOS-specific files
+.DS_Store
+
+# ElixirLS (VS Code extension) directory
+/.elixir_ls/
+
+# Phoenix-specific generated files
 /config/*.secret.exs
-.elixir_ls/
+/priv/templates/phx.gen.live/core_components.ex
+
+# Optional: Ignore editor-specific files (e.g., Vim swap files)
+*.swp
+*.swo
+
+# Optional: Ignore release management files (if using tools like exrm)
+/rel/
+
+# Optional: Environment-specific config templates (if using a template approach for secrets)
+/config/*.exs.template
+
+# Optional: Docker-related files (if using Docker)
+.dockerignore
+Dockerfile
