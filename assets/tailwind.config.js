@@ -16,7 +16,9 @@ module.exports = {
       colors: {
         brand: "#FD4F00",
         flask: "#221E38",
-        flask_bright: "#262336"
+        flask_bright: "#262336",
+        message_incoming: "#3a2b63",
+        message_outgoing: "#533e8a"
       }
     },
   },
