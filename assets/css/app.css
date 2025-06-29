@@ -3,3 +3,13 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+
+@layer {
+    body {
+        @apply h-screen flex flex-col
+    }
+
+    body>div {
+        @apply flex-grow min-h-0 flex flex-col
+    }
+}

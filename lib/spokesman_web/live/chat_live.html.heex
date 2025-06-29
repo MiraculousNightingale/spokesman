@@ -1,0 +1,10 @@
+<div class="flex-grow min-h-0 flex flex-row w-full">
+  <div class="w-3/12 h-full flex flex-col gap-1 overflow-auto">
+    <%= for _ <- 1..10 do %>
+      <.chat_list_item />
+    <% end %>
+  </div>
+  <div class="w-3/4 bg-slate-400">
+    <p>Chat Messaging UI</p>
+  </div>
+</div>
