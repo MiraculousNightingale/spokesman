@@ -21,7 +21,7 @@ defmodule SpokesmanWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    live "/chat", ChatLive
+    live "/chat/:chat_id", ChatLive
   end
 
   # Other scopes may use custom stacks.

@@ -21,6 +21,16 @@ defmodule Spokesman.UserMessages do
     Repo.all(UserMessage)
   end
 
+  def list_user_messages_for_chat(chat_id) do
+    from(m in UserMessage,
+      where: m.chat_id == ^chat_id,
+      order_by: [desc: m.inserted_at]
+    )
+    |> Repo.all()
+
+    # TODO: add pagination
+  end
+
   @doc """
   Gets a single user_message.
 

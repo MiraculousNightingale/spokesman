@@ -19,17 +19,16 @@ defmodule SpokesmanWeb.ChatComponents do
   end
 
   def chat_message_bubble(assigns) do
-    incoming_style = "mr-auto bg-message_incoming"
-    outgoing_style = "ml-auto bg-message_outgoing"
-
     ~H"""
-    <div class={"p-2 m-2 w-fit rounded-2xl text-stone-100 max-w-[45%] #{if Integer.is_odd(@i) do incoming_style else outgoing_style end}"}>
-      This is {if Integer.is_odd(@i) do
-        "incoming"
-      else
-        "outgoing"
-      end} BRA TAAAN BRA TAAAN BRA TAAAN BRA TAAAN BRA TAAAN BRA TAAAN BRA TAAAN BRA TAAAN BRA TAAAN BRA TAAAN BRA TAAAN BRA TAAAN!
-    </div>
+    <%= if @user_id == 1 do %>
+      <div class="p-2 m-2 w-fit rounded-2xl text-stone-100 max-w-[45%] mr-auto bg-message_incoming">
+        {@text}
+      </div>
+    <% else %>
+      <div class="p-2 m-2 w-fit rounded-2xl text-stone-100 max-w-[45%] ml-auto bg-message_outgoing">
+        {@text}
+      </div>
+    <% end %>
     """
   end
 end

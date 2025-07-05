@@ -5,8 +5,8 @@
     <% end %>
   </div>
   <div class="flex-grow overflow-auto">
-    <%= for i <- 1..15 do %>
-      <.chat_message_bubble i={i} />
+    <%= for {id, m} <- @streams.messages do %>
+      <.chat_message_bubble id={id} user_id={m.user_id} text={m.text} />
     <% end %>
   </div>
 </div>
