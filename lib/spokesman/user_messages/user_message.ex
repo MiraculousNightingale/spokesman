@@ -4,8 +4,9 @@ defmodule Spokesman.UserMessages.UserMessage do
 
   schema "user_messages" do
     field :text, :string
-    field :chat_id, :id
-    field :user_id, :id
+
+    belongs_to :chat, Spokesman.Chats.Chat
+    belongs_to :user, Spokesman.Users.User
 
     timestamps(type: :utc_datetime)
   end

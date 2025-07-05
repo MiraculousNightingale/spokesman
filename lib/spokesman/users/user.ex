@@ -9,6 +9,11 @@ defmodule Spokesman.Users.User do
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
 
+    has_many :user_messages, Spokesman.UserMessages.UserMessage
+
+    has_many :chat_users, Spokesman.ChatUsers.ChatUser
+    has_many :chats, through: [:chat_users, :chat]
+
     timestamps(type: :utc_datetime)
   end
 

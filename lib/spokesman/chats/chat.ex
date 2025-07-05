@@ -3,7 +3,10 @@ defmodule Spokesman.Chats.Chat do
   import Ecto.Changeset
 
   schema "chats" do
+    has_many :user_messages, Spokesman.UserMessages.UserMessage
 
+    has_many :chat_users, Spokesman.UserMessages.UserMessage
+    has_many :users, through: [:chat_users, :user]
 
     timestamps(type: :utc_datetime)
   end
