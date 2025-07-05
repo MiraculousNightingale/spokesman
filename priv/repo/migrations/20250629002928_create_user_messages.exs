@@ -3,7 +3,7 @@ defmodule Spokesman.Repo.Migrations.CreateUserMessages do
 
   def change do
     create table(:user_messages) do
-      add :text, :text
+      add :text, :text, null: false, default: ""
       add :chat_id, references(:chats, on_delete: :nothing)
       add :user_id, references(:users, on_delete: :nothing)
 
