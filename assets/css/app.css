@@ -1,15 +1,30 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 /* This file is for your main application CSS */
 
-@layer {
+@layer components {
     body {
-        @apply h-screen flex flex-col
+        @apply h-screen flex flex-col;
     }
 
     body>div {
-        @apply flex-grow min-h-0 flex flex-col
+        @apply flex-grow min-h-0 flex flex-col;
+    }
+
+    .chat-input form {
+        @apply h-full flex flex-col;
+    }
+
+    .chat-input div {
+        @apply flex-grow flex flex-col;
+    }
+
+    .chat-input textarea {
+        @apply flex-grow;
+        @apply resize-none border-none;
+        @apply bg-flask_brighter;
+        @apply text-lg text-stone-50 placeholder:text-stone-200;
     }
 }

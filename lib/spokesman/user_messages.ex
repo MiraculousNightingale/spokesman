@@ -24,7 +24,7 @@ defmodule Spokesman.UserMessages do
   def list_user_messages_for_chat(chat_id) do
     from(m in UserMessage,
       where: m.chat_id == ^chat_id,
-      order_by: [desc: m.inserted_at]
+      order_by: [asc: m.inserted_at, asc: m.id]
     )
     |> Repo.all()
 
@@ -61,6 +61,12 @@ defmodule Spokesman.UserMessages do
   """
   def create_user_message(attrs \\ %{}) do
     %UserMessage{}
+    |> UserMessage.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_user_message_with_ids(chat_id, user_id, attrs \\ %{}) do
+    %UserMessage{chat_id: chat_id, user_id: user_id}
     |> UserMessage.changeset(attrs)
     |> Repo.insert()
   end

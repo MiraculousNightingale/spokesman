@@ -17,6 +17,7 @@ module.exports = {
         brand: "#FD4F00",
         flask: "#221E38",
         flask_bright: "#262336",
+        flask_brighter: "#2e2a41",
         message_incoming: "#3a2b63",
         message_outgoing: "#533e8a"
       }

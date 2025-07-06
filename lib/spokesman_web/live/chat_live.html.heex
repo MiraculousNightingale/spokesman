@@ -4,9 +4,22 @@
       <.chat_list_item />
     <% end %>
   </div>
-  <div class="flex-grow overflow-auto">
-    <%= for {id, m} <- @streams.messages do %>
-      <.chat_message_bubble id={id} user_id={m.user_id} text={m.text} />
-    <% end %>
+  <div class="flex-grow flex flex-col">
+    <div id="messages" class="flex-grow overflow-auto" phx-update="stream">
+      <%= for {id, message} <- @streams.messages do %>
+        <.chat_message_bubble id={id} message={message} />
+      <% end %>
+    </div>
+    <div class="h-64 flex-shrink-0 chat-input">
+      <.form id="new_message_form" for={@new_message_form} phx-change="changed" phx-submit="send">
+        <.input
+          field={@new_message_form[:text]}
+          type="textarea"
+          placeholder="Write a new message..."
+          autofocus
+          phx-hook="TextAreaSubmitOnEnter"
+        />
+      </.form>
+    </div>
   </div>
 </div>

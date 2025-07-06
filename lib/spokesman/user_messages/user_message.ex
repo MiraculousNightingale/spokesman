@@ -14,7 +14,9 @@ defmodule Spokesman.UserMessages.UserMessage do
   @doc false
   def changeset(user_message, attrs) do
     user_message
-    |> cast(attrs, [:text])
-    |> validate_required([:text])
+    |> cast(attrs, [:text, :chat_id, :user_id])
+    |> validate_required([:text, :chat_id, :user_id])
+    |> foreign_key_constraint(:chat_id)
+    |> foreign_key_constraint(:user_id)
   end
 end

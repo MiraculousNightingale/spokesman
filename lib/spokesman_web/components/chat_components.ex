@@ -20,13 +20,13 @@ defmodule SpokesmanWeb.ChatComponents do
 
   def chat_message_bubble(assigns) do
     ~H"""
-    <%= if @user_id == 1 do %>
+    <%= if @message.user_id == 1 do %>
       <div class="p-2 m-2 w-fit rounded-2xl text-stone-100 max-w-[45%] mr-auto bg-message_incoming">
-        {@text}
+        {@message.text}
       </div>
     <% else %>
       <div class="p-2 m-2 w-fit rounded-2xl text-stone-100 max-w-[45%] ml-auto bg-message_outgoing">
-        {@text}
+        {@message.text}
       </div>
     <% end %>
     """
