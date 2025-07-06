@@ -53,4 +53,7 @@ erl_crash.dump
 .dockerignore
 Dockerfile
 
+# Ignore private files (backups, testing, etc.)
 /lib/**/_*
+
+.vscode/
