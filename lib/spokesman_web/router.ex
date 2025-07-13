@@ -18,10 +18,14 @@ defmodule SpokesmanWeb.Router do
   end
 
   scope "/", SpokesmanWeb do
-    pipe_through :browser
+    pipe_through [:browser, :require_authenticated_user]
 
     get "/", PageController, :home
-    live "/chat/:chat_id", ChatLive
+
+    live_session :chat,
+      on_mount: [{SpokesmanWeb.UserAuth, :ensure_authenticated}] do
+      live("/chat/:chat_id", ChatLive)
+    end
   end
 
   # Other scopes may use custom stacks.
