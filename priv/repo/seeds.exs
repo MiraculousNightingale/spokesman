@@ -20,6 +20,7 @@ alias Spokesman.Users.User
 bob =
   %User{}
   |> User.registration_changeset(%{
+    name: "Bob",
     email: "bob@gmail.com",
     password: "bobson123456"
   })
@@ -28,6 +29,7 @@ bob =
 jimmy =
   %User{}
   |> User.registration_changeset(%{
+    name: "Jimmy",
     email: "jimmy@gmail.com",
     password: "saulgoodman1"
   })
