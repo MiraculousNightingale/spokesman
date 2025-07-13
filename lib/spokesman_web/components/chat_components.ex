@@ -4,14 +4,14 @@ defmodule SpokesmanWeb.ChatComponents do
 
   def chat_list_item(assigns) do
     ~H"""
-    <div class="py-2 px-2 flex flex-row items-center gap-2 bg-indigo-400">
+    <div id={@id} class="py-2 px-2 flex flex-row items-center gap-2 bg-indigo-400">
       <div class="w-10 h-10 shrink-0 rounded-full bg-pink-400 flex items-center justify-center text-white">
-        U
+        {@chat.user_first_letter}
       </div>
       <div class="min-w-0">
-        <p class="font-semibold">Username</p>
+        <p class="font-semibold">{@chat.user_name}</p>
         <p class="truncate">
-          Hello I wrote to you today, about your extended warranty, what do you think is going to happen now?
+          {@chat.last_message_text}
         </p>
       </div>
     </div>

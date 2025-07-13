@@ -1,7 +1,7 @@
 <div class="flex-grow min-h-0 flex flex-row w-full">
-  <div class="w-[25%] h-full flex flex-col gap-1 overflow-auto">
-    <%= for _ <- 1..10 do %>
-      <.chat_list_item />
+  <div id="chats" class="w-[25%] h-full flex flex-col gap-1 overflow-auto" phx-update="stream">
+    <%= for {id, chat} <- @streams.chats do %>
+      <.chat_list_item id={id} chat={chat} />
     <% end %>
   </div>
   <div class="flex-grow flex flex-col">

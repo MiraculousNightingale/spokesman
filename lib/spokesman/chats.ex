@@ -7,6 +7,7 @@ defmodule Spokesman.Chats do
   alias Spokesman.Repo
 
   alias Spokesman.Chats.Chat
+  alias Spokesman.ChatUsers.ChatUser
 
   @doc """
   Returns the list of chats.
@@ -19,6 +20,19 @@ defmodule Spokesman.Chats do
   """
   def list_chats do
     Repo.all(Chat)
+  end
+
+  def list_chats_for_user(user_id) do
+    from(
+      c in Chat,
+      inner_join: cu in ChatUser,
+      on: cu.chat_id == c.id,
+      where: cu.user_id == ^user_id,
+      order_by: [desc: c.updated_at, asc: c.id]
+    )
+    |> Repo.all()
+
+    # TODO: add pagination
   end
 
   @doc """

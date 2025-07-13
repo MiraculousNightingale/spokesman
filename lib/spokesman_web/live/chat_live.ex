@@ -1,9 +1,13 @@
 defmodule SpokesmanWeb.ChatLive do
   use SpokesmanWeb, :live_view
 
+  alias Spokesman.Repo
+alias Spokesman.Chats
+  alias Spokesman.Chats.Chat
+  alias Spokesman.Users.User
   alias Spokesman.UserMessages
   alias Spokesman.UserMessages.UserMessage
-  # alias Spokesman.Chats
+  
   import SpokesmanWeb.ChatComponents
 
   def mount(%{"chat_id" => chat_id}, _session, socket) do
@@ -16,14 +20,26 @@ defmodule SpokesmanWeb.ChatLive do
       socket
       |> assign(:new_message_form, form)
       |> assign(:chat_id, chat_id)
-      |> assign(:user_id, 1)
 
     {:ok, socket}
   end
 
   def handle_params(%{"chat_id" => chat_id}, _uri, socket) do
-    messages = UserMessages.list_user_messages_for_chat(chat_id)
+%{current_user: %User{} = current_user} = socket.assigns
+
+    chats =
+      Chats.list_chats_for_user(current_user.id)
+      |> Repo.preload([:users, :last_user_message])
+      |> Enum.map(&chat_element(&1))
+
+    socket = stream(socket, :chats, chats)
+
+    messages =
+UserMessages.list_user_messages_for_chat(chat_id)
+|> Enum.map(&message_element(current_user, &1))
+
     socket = stream(socket, :messages, messages)
+
     {:noreply, socket}
   end
 
@@ -71,5 +87,29 @@ defmodule SpokesmanWeb.ChatLive do
 
         {:noreply, socket}
     end
+  end
+
+  defp chat_element(%Chat{id: id, users: users, last_user_message: last_user_message}) do
+    %{
+      id: id,
+      user_name: List.first(users).name,
+      user_first_letter: String.first(List.first(users).name),
+      last_message_text: last_user_message.text
+    }
+  end
+
+  defp message_element(
+         %User{id: current_user_id},
+         %UserMessage{
+           id: id,
+           text: text,
+           user_id: user_id
+         }
+       ) do
+    %{
+      id: id,
+      text: text,
+      is_incoming: user_id != current_user_id
+    }
   end
 end
