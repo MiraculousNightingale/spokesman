@@ -11,6 +11,14 @@ defmodule Spokesman.Chats do
 
   alias Spokesman.UserMessages.UserMessage
 
+  def subscribe_to_chat_updates(chat_id) do
+    Phoenix.PubSub.subscribe(Spokesman.PubSub, "chat:#{chat_id}:chat_updates")
+  end
+
+  def broadcast_chat_update(chat_id, message) do
+    Phoenix.PubSub.broadcast(Spokesman.PubSub, "chat:#{chat_id}:chat_updates", message)
+  end
+
   @doc """
   Returns the list of chats.
 

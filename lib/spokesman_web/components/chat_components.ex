@@ -20,7 +20,7 @@ defmodule SpokesmanWeb.ChatComponents do
 
   def chat_message_bubble(assigns) do
     ~H"""
-    <%= if @message.is_incoming do %>
+    <%= if @message.user_id != @current_user_id do %>
       <div
         id={@id}
         class="p-2 m-2 w-fit rounded-2xl text-stone-100 max-w-[45%] mr-auto bg-message_incoming"

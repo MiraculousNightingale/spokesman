@@ -7,6 +7,15 @@ defmodule Spokesman.Users do
   alias Spokesman.Repo
 
   alias Spokesman.Users.{User, UserToken, UserNotifier}
+  alias Spokesman.ChatUsers.ChatUser
+
+  def subscribe_to_chat_updates(user_id) do
+    Phoenix.PubSub.subscribe(Spokesman.PubSub, "user:#{user_id}:chat_updates")
+  end
+
+  def broadcast_chat_update(user_id, message) do
+    Phoenix.PubSub.broadcast(Spokesman.PubSub, "user:#{user_id}:chat_updates", message)
+  end
 
   ## Database getters
 
@@ -59,6 +68,15 @@ defmodule Spokesman.Users do
 
   """
   def get_user!(id), do: Repo.get!(User, id)
+
+  def list_users_for_chat(chat_id) do
+    from(u in User,
+      inner_join: cu in ChatUser,
+      on: cu.chat_id == ^chat_id,
+      order_by: [asc: cu.inserted_at, asc: u.id]
+    )
+    |> Repo.all()
+  end
 
   ## User registration
 

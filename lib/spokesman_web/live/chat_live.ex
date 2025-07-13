@@ -4,13 +4,18 @@ defmodule SpokesmanWeb.ChatLive do
   alias Spokesman.Repo
   alias Spokesman.Chats
   alias Spokesman.Chats.Chat
+  alias Spokesman.Users
   alias Spokesman.Users.User
   alias Spokesman.UserMessages
   alias Spokesman.UserMessages.UserMessage
 
   import SpokesmanWeb.ChatComponents
 
-  def mount(%{"chat_id" => chat_id}, _session, socket) do
+  def mount(_unsigned_params, _session, socket) do
+    %{current_user: %User{id: current_user_id}} = socket.assigns
+
+    Users.subscribe_to_chat_updates(current_user_id)
+
     form =
       %UserMessage{}
       |> UserMessages.change_user_message()
@@ -19,7 +24,6 @@ defmodule SpokesmanWeb.ChatLive do
     socket =
       socket
       |> assign(:new_message_form, form)
-      |> assign(:chat_id, chat_id)
 
     {:ok, socket}
   end
@@ -27,18 +31,25 @@ defmodule SpokesmanWeb.ChatLive do
   def handle_params(%{"chat_id" => chat_id}, _uri, socket) do
     %{current_user: %User{} = current_user} = socket.assigns
 
+    Chats.subscribe_to_chat_updates(chat_id)
+
     chats =
       Chats.list_chats_for_user(current_user.id)
       |> Repo.preload([:users, :last_user_message])
       |> Enum.map(&chat_element(&1))
 
-    socket = stream(socket, :chats, chats)
+    chat_users = Users.list_users_for_chat(chat_id)
 
     messages =
       UserMessages.list_user_messages_for_chat(chat_id)
-      |> Enum.map(&message_element(current_user, &1))
+      |> Enum.map(&message_element(&1))
 
-    socket = stream(socket, :messages, messages)
+    socket =
+      socket
+      |> assign(:chat_id, chat_id)
+      |> assign(:chat_users, chat_users)
+      |> stream(:chats, chats)
+      |> stream(:messages, messages)
 
     {:noreply, socket}
   end
@@ -57,7 +68,11 @@ defmodule SpokesmanWeb.ChatLive do
   end
 
   def handle_event("send", %{"user_message" => message}, socket) do
-    %{chat_id: chat_id, current_user: current_user} = socket.assigns
+    %{
+      chat_id: chat_id,
+      current_user: current_user,
+      chat_users: chat_users
+    } = socket.assigns
 
     message =
       message
@@ -73,11 +88,24 @@ defmodule SpokesmanWeb.ChatLive do
           |> UserMessages.change_user_message()
           |> to_form()
 
+        message_element = message_element(message)
+        chat_element = chat_element(current_user, message)
+
         socket =
           socket
           |> assign(:new_message_form, form)
-          |> stream_insert(:messages, message_element(current_user, message))
-          |> stream_insert(:chats, chat_element(current_user, message))
+          |> stream_insert(:messages, message_element)
+          |> stream_insert(:chats, chat_element)
+
+        Chats.broadcast_chat_update(chat_id, {:chat_message_added, message_element})
+
+        chat_users
+        |> Enum.each(
+          &Users.broadcast_chat_update(
+            &1.id,
+            {:chat_last_message_updated, chat_element}
+          )
+        )
 
         {:noreply, socket}
 
@@ -93,6 +121,14 @@ defmodule SpokesmanWeb.ChatLive do
 
         {:noreply, socket}
     end
+  end
+
+  def handle_info({:chat_last_message_updated, chat_element}, socket) do
+    {:noreply, stream_insert(socket, :chats, chat_element)}
+  end
+
+  def handle_info({:chat_message_added, message_element}, socket) do
+    {:noreply, stream_insert(socket, :messages, message_element)}
   end
 
   defp chat_element(%Chat{id: id, users: users, last_user_message: last_user_message}) do
@@ -113,18 +149,11 @@ defmodule SpokesmanWeb.ChatLive do
     }
   end
 
-  defp message_element(
-         %User{id: current_user_id},
-         %UserMessage{
-           id: id,
-           text: text,
-           user_id: user_id
-         }
-       ) do
+  defp message_element(%UserMessage{id: id, text: text, user_id: user_id}) do
     %{
       id: id,
       text: text,
-      is_incoming: user_id != current_user_id
+      user_id: user_id
     }
   end
 end
