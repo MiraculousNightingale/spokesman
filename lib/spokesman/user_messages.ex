@@ -4,7 +4,11 @@ defmodule Spokesman.UserMessages do
   """
 
   import Ecto.Query, warn: false
+
   alias Spokesman.Repo
+
+  alias Spokesman.Chats
+  alias Spokesman.Chats.Chat
 
   alias Spokesman.UserMessages.UserMessage
 
@@ -63,6 +67,28 @@ defmodule Spokesman.UserMessages do
     %UserMessage{}
     |> UserMessage.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def add_user_message(attrs \\ %{}) do
+    Repo.transaction(fn ->
+      case create_user_message(attrs) do
+        {:ok, %UserMessage{} = user_message} ->
+          res =
+            %Chat{id: user_message.chat_id}
+            |> Chats.update_last_user_message(user_message)
+
+          case res do
+            {:ok, _} ->
+              user_message
+
+            {:error, _} ->
+              Repo.rollback("Failed to update last user message of this chat")
+          end
+
+        {:error, changeset} ->
+          Repo.rollback(changeset)
+      end
+    end)
   end
 
   def create_user_message_with_ids(chat_id, user_id, attrs \\ %{}) do

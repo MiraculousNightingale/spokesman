@@ -13,7 +13,7 @@ defmodule Spokesman.ChatUsers.ChatUser do
 
   @doc false
   def changeset(chat_user, attrs) do
-  chat_user
+    chat_user
     |> cast(attrs, [])
     |> validate_required([])
     |> validate_inclusion(:role, ["owner", "user", "admin", "moderator"])

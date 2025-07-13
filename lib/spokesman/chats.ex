@@ -9,6 +9,8 @@ defmodule Spokesman.Chats do
   alias Spokesman.Chats.Chat
   alias Spokesman.ChatUsers.ChatUser
 
+  alias Spokesman.UserMessages.UserMessage
+
   @doc """
   Returns the list of chats.
 
@@ -33,6 +35,12 @@ defmodule Spokesman.Chats do
     |> Repo.all()
 
     # TODO: add pagination
+  end
+
+  def update_last_user_message(%Chat{} = chat, %UserMessage{} = user_message) do
+    chat
+    |> Chat.change_last_user_message(user_message.id)
+    |> Repo.update()
   end
 
   @doc """

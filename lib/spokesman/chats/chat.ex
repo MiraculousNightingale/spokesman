@@ -22,4 +22,12 @@ defmodule Spokesman.Chats.Chat do
     |> validate_required([])
     |> assoc_constraint(:last_user_message)
   end
+
+  def change_last_user_message(chat, last_user_message_id)
+      when is_integer(last_user_message_id) do
+    chat
+    |> cast(%{}, [])
+    |> put_change(:last_user_message_id, last_user_message_id)
+    |> assoc_constraint(:last_user_message)
+  end
 end

@@ -16,7 +16,7 @@ defmodule Spokesman.UserMessages.UserMessage do
     user_message
     |> cast(attrs, [:text, :chat_id, :user_id])
     |> validate_required([:text, :chat_id, :user_id])
-    |> foreign_key_constraint(:chat_id)
-    |> foreign_key_constraint(:user_id)
+    |> assoc_constraint(:chat)
+    |> assoc_constraint(:user)
   end
 end
