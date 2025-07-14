@@ -96,6 +96,7 @@ defmodule SpokesmanWeb.ChatLive do
           |> assign(:new_message_form, form)
           |> stream_insert(:messages, message_element)
           |> stream_insert(:chats, chat_element)
+          |> push_event("spokesman:chat_message_added", %{})
 
         Chats.broadcast_chat_update(chat_id, {:chat_message_added, message_element})
 

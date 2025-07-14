@@ -5,7 +5,12 @@
     <% end %>
   </div>
   <div class="flex-grow flex flex-col">
-    <div id="messages" class="flex-grow overflow-auto" phx-update="stream">
+    <div
+      id="messages"
+      class="flex-grow overflow-auto"
+      phx-update="stream"
+      phx-hook="ScrollDownOnNewMessage"
+    >
       <%= for {id, message} <- @streams.messages do %>
         <.chat_message_bubble id={id} message={message} current_user_id={@current_user.id} />
       <% end %>

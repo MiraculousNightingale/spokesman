@@ -31,6 +31,35 @@ let hooks = {
           this.el.form.requestSubmit()
         }
       })
+    },
+  },
+
+  ScrollDownOnNewMessage: {
+    mounted() {
+      this.handleEvent("spokesman:chat_message_added", (e) => {
+        this.el.scrollTop = this.el.scrollHeight
+      })
+
+      this.observer = new MutationObserver(() => this.maybeScrollToBottom());
+      this.observer.observe(this.el, { childList: true });
+    },
+    destroyed() {
+      this.observer.disconnect();
+    },
+
+    scrollToBottom() {
+      this.el.scrollTop = this.el.scrollHeight
+    },
+
+    maybeScrollToBottom() {
+      let maxScroll = this.el.scrollHeight - this.el.clientHeight,
+        scrollPercentage = this.el.scrollTop / maxScroll
+
+      console.log(`SCROLL PERCENTAGE ${scrollPercentage}`)
+
+      if (scrollPercentage >= 0.9) {
+        this.scrollToBottom()
+      }
     }
   }
 }
