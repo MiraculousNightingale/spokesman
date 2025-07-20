@@ -50,10 +50,10 @@ end)
 |> Ecto.Multi.insert(:chat_user_jimmy, fn %{} ->
   %ChatUser{chat: chat, user: jimmy}
 end)
+# Messages
 |> Ecto.Multi.insert(:bob_message_1, fn %{} ->
   %UserMessage{chat: chat, user: bob, text: "Good day, Jimmy!"}
 end)
-# Messages
 |> Ecto.Multi.insert(:jimmy_message_1, fn %{} ->
   %UserMessage{chat: chat, user: jimmy, text: "Hello, Bob! How's your day?"}
 end)
@@ -73,6 +73,43 @@ end)
 
 last_message =
   %UserMessage{chat: chat, user: bob, text: "Sosal"}
+  |> UserMessage.changeset(%{})
+  |> Repo.insert!()
+
+chat
+|> Chats.update_last_user_message(last_message)
+
+# Chat
+chat =
+  %Chat{is_direct: true}
+  |> Chat.changeset(%{})
+  |> Repo.insert!()
+
+# Chat Users
+Ecto.Multi.new()
+|> Ecto.Multi.insert(:chat_user_bob, fn %{} ->
+  %ChatUser{chat: chat, user: bob}
+end)
+|> Ecto.Multi.insert(:chat_user_jimmy, fn %{} ->
+  %ChatUser{chat: chat, user: jimmy}
+end)
+# Messages
+|> Ecto.Multi.insert(:bob_message_1, fn %{} ->
+  %UserMessage{chat: chat, user: bob, text: "Wow this is another chat!"}
+end)
+|> Ecto.Multi.insert(:jimmy_message_1, fn %{} ->
+  %UserMessage{chat: chat, user: jimmy, text: "Yeah, it's like the second one"}
+end)
+|> Ecto.Multi.insert(:bob_message_2, fn %{} ->
+  %UserMessage{chat: chat, user: bob, text: "Nice"}
+end)
+|> Ecto.Multi.insert(:jimmy_message_2, fn %{} ->
+  %UserMessage{chat: chat, user: jimmy, text: "Yeah"}
+end)
+|> Repo.transaction()
+
+last_message =
+  %UserMessage{chat: chat, user: bob, text: "How about switching between them?"}
   |> UserMessage.changeset(%{})
   |> Repo.insert!()
 
