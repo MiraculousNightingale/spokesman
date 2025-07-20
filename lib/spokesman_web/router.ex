@@ -24,7 +24,7 @@ defmodule SpokesmanWeb.Router do
 
     live_session :chat,
       on_mount: [{SpokesmanWeb.UserAuth, :ensure_authenticated}] do
-      live("/chat/:chat_id", ChatLive)
+      live("/chats/:chat_id", ChatLive)
     end
   end
 
