@@ -15,7 +15,7 @@ defmodule Spokesman.UserMessages.UserMessage do
   def changeset(user_message, attrs) do
     user_message
     |> cast(attrs, [:text, :chat_id, :user_id])
-    |> validate_required([:text, :chat_id, :user_id])
+    |> validate_required([:text])
     |> assoc_constraint(:chat)
     |> assoc_constraint(:user)
   end
