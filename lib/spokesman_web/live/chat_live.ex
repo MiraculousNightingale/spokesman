@@ -16,6 +16,11 @@ defmodule SpokesmanWeb.ChatLive do
 
     Users.subscribe_to_chat_updates(current_user_id)
 
+    chats =
+      Chats.list_chats_for_user(current_user_id)
+      |> Repo.preload([:users, :last_user_message])
+      |> Enum.map(&chat_element(&1))
+
     form =
       %UserMessage{}
       |> UserMessages.change_user_message()
@@ -24,19 +29,19 @@ defmodule SpokesmanWeb.ChatLive do
     socket =
       socket
       |> assign(:new_message_form, form)
+      |> stream(:chats, chats)
 
     {:ok, socket}
   end
 
   def handle_params(%{"chat_id" => chat_id}, _uri, socket) do
-    %{current_user: %User{} = current_user} = socket.assigns
+    chat_id = String.to_integer(chat_id)
+
+    if Map.has_key?(socket.assigns, :chat_id) do
+      Chats.unsubscribe_from_chat_updates(socket.assigns.chat_id)
+    end
 
     Chats.subscribe_to_chat_updates(chat_id)
-
-    chats =
-      Chats.list_chats_for_user(current_user.id)
-      |> Repo.preload([:users, :last_user_message])
-      |> Enum.map(&chat_element(&1))
 
     chat_users = Users.list_users_for_chat(chat_id)
 
@@ -48,8 +53,8 @@ defmodule SpokesmanWeb.ChatLive do
       socket
       |> assign(:chat_id, chat_id)
       |> assign(:chat_users, chat_users)
-      |> stream(:chats, chats)
-      |> stream(:messages, messages)
+      |> stream(:messages, messages, reset: true)
+      |> push_event("spokesman:chat_selected", %{chat_id: chat_id})
 
     {:noreply, socket}
   end

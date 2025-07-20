@@ -4,17 +4,19 @@ defmodule SpokesmanWeb.ChatComponents do
 
   def chat_list_item(assigns) do
     ~H"""
-    <div id={@id} class="py-2 px-2 flex flex-row items-center gap-2 bg-indigo-400">
-      <div class="w-10 h-10 shrink-0 rounded-full bg-pink-400 flex items-center justify-center text-white">
-        {@chat.user_first_letter}
+    <.link id={@id} patch={~p"/chat/#{@chat.id}"}>
+      <div class={"py-2 px-2 flex flex-row items-center gap-2 #{if @chat.id == @current_chat_id do "selected-chat" else "unselected-chat" end}"}>
+        <div class="w-10 h-10 shrink-0 rounded-full bg-pink-400 flex items-center justify-center text-white">
+          {@chat.user_first_letter}
+        </div>
+        <div class="min-w-0">
+          <p class="font-semibold">{@chat.user_name}</p>
+          <p class="truncate">
+            {@chat.last_message_text}
+          </p>
+        </div>
       </div>
-      <div class="min-w-0">
-        <p class="font-semibold">{@chat.user_name}</p>
-        <p class="truncate">
-          {@chat.last_message_text}
-        </p>
-      </div>
-    </div>
+    </.link>
     """
   end
 

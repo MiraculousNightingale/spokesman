@@ -1,7 +1,12 @@
 <div class="flex-grow min-h-0 flex flex-row w-full">
-  <div id="chats" class="w-[25%] h-full flex flex-col gap-1 overflow-auto" phx-update="stream">
+  <div
+    id="chats"
+    class="w-[25%] h-full flex flex-col gap-1 overflow-auto"
+    phx-update="stream"
+    phx-hook="HighlightSelectedChat"
+  >
     <%= for {id, chat} <- @streams.chats do %>
-      <.chat_list_item id={id} chat={chat} />
+      <.chat_list_item id={id} chat={chat} current_chat_id={@chat_id}/>
     <% end %>
   </div>
   <div class="flex-grow flex flex-col">

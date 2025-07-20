@@ -27,4 +27,14 @@
         @apply bg-flask_brighter;
         @apply text-lg text-stone-50 placeholder:text-stone-200;
     }
+
+    .selected-chat {
+        @apply bg-indigo-400;
+        @apply text-stone-50
+    }
+
+    .unselected-chat {
+        @apply bg-flask_brightest;
+        @apply text-stone-200
+    }
 }

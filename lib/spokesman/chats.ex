@@ -19,6 +19,10 @@ defmodule Spokesman.Chats do
     Phoenix.PubSub.broadcast(Spokesman.PubSub, "chat:#{chat_id}:chat_updates", message)
   end
 
+  def unsubscribe_from_chat_updates(chat_id) do
+    Phoenix.PubSub.unsubscribe(Spokesman.PubSub, "chat:#{chat_id}:chat_updates")
+  end
+
   @doc """
   Returns the list of chats.
 

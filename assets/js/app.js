@@ -61,6 +61,19 @@ let hooks = {
         this.scrollToBottom()
       }
     }
+  },
+
+  HighlightSelectedChat: {
+    mounted() {
+      this.handleEvent("spokesman:chat_selected", (e) => {
+
+        const previousSelectedChat = this.el.querySelector('.selected-chat')
+        previousSelectedChat?.classList.replace("selected-chat", "unselected-chat")
+
+        const newSelectedChat = this.el.querySelector(`#chats-${e.chat_id} .unselected-chat`)
+        newSelectedChat?.classList.replace("unselected-chat", "selected-chat")
+      })
+    }
   }
 }
 
