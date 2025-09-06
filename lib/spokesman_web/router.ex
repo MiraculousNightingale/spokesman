@@ -20,11 +20,12 @@ defmodule SpokesmanWeb.Router do
   scope "/", SpokesmanWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    get "/", PageController, :home
+    get "/", RedirectController, :to, private: %{redirect_to: "/chats"}
 
     live_session :chat,
       on_mount: [{SpokesmanWeb.UserAuth, :ensure_authenticated}] do
-      live("/chats/:chat_id", ChatLive)
+      live "/chats/:chat_id", ChatLive
+      live "/chats", ChatLive
     end
   end
 

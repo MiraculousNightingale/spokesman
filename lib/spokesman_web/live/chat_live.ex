@@ -59,6 +59,17 @@ defmodule SpokesmanWeb.ChatLive do
     {:noreply, socket}
   end
 
+  def handle_params(_unsigned_params, _uri, socket) do
+    socket =
+      socket
+      |> assign(:chat_id, nil)
+      |> assign(:chat_users, [])
+      |> stream(:messages, [], reset: true)
+      |> push_event("spokesman:chat_selected", %{chat_id: ""})
+
+    {:noreply, socket}
+  end
+
   def handle_event("changed", %{"user_message" => message}, socket) do
     form =
       %UserMessage{}

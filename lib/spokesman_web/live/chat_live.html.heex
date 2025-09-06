@@ -6,7 +6,7 @@
     phx-hook="HighlightSelectedChat"
   >
     <%= for {id, chat} <- @streams.chats do %>
-      <.chat_list_item id={id} chat={chat} current_chat_id={@chat_id}/>
+      <.chat_list_item id={id} chat={chat} current_chat_id={@chat_id} />
     <% end %>
   </div>
   <div class="flex-grow flex flex-col">
@@ -25,9 +25,14 @@
         <.input
           field={@new_message_form[:text]}
           type="textarea"
-          placeholder="Write a new message..."
+          placeholder={
+            if is_nil(@chat_id),
+              do: "Please select or create a chat.",
+              else: "Write a new message..."
+          }
           autofocus
           phx-hook="TextAreaSubmitOnEnter"
+          disabled={is_nil(@chat_id)}
         />
         <%!-- <button type="submit">
           <i class="fa fa-paper-plane" aria-hidden="true" height="100px" width="100px"></i>
