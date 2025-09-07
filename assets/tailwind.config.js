@@ -21,7 +21,8 @@ module.exports = {
         flask_brightest: "#4b446e",
         message_incoming: "#3a2b63",
         message_outgoing: "#533e8a",
-        link: "#9d7dff"
+        link: "#9d7dff",
+        link_hover: "#7c50ff"
       }
     },
   },
